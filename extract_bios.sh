@@ -72,7 +72,7 @@ Usage: $0 [OPTIONS]
   --help              - This screen
 
 EOF
-  exit 0
+exit 0
 }
 
 check_commands()
@@ -84,29 +84,29 @@ check_commands()
 
 get_system_name()
 {
-	echo "$(dmidecode -t system |grep "Product Name:" | awk -F": " '/./{print $2}')"
+  echo "$(dmidecode -t system |grep "Product Name:" | awk -F": " '/./{print $2}')"
 }
 
 get_bios_type()
 {
-	echo "$(dmidecode -t bios |grep "Version:" | awk '{print $2}')"
+  echo "$(dmidecode -t bios |grep "Version:" | awk '{print $2}')"
 }
 
 get_bios_version()
 {
-	var_printable=$1
-	if [ "$var_printable" = true ] ; then
-		echo "$(dmidecode -t bios |grep "Version:" | awk '{print $4}')"
-	else
-		echo "$(dmidecode -t bios |grep "Version:" | awk '{print $4}' | awk -F"." '/./{print $1 $2}')"
-	fi
+  var_printable=$1
+  if [ "$var_printable" = true ] ; then
+    echo "$(dmidecode -t bios |grep "Version:" | awk '{print $4}')"
+  else
+    echo "$(dmidecode -t bios |grep "Version:" | awk '{print $4}' | awk -F"." '/./{print $1 $2}')"
+  fi
 }
 
 get_bios_info()
 {
-	sys_name="$(get_system_name)"
-	type="$(get_bios_type)"
-	version="$(get_bios_version true)"
+  sys_name="$(get_system_name)"
+  type="$(get_bios_type)"
+  version="$(get_bios_version true)"
 
   cat << EOF
 
@@ -121,19 +121,19 @@ EOF
 
 extract_exe_do_work()
 {
-	mkdir -p "$tmp_folder"
+  mkdir -p "$tmp_folder"
 
-	echo "Extracting content of archive..."
-	cabextract "$FILE" -q -d "$tmp_folder"
+  echo "Extracting content of archive..."
+  cabextract "$FILE" -q -d "$tmp_folder"
   cabextract "$tmp_folder/ROM.CAB" -q -d "$tmp_folder"
-	
+
   type="$(get_bios_type)"
-	usbupdate=$(find "$tmp_folder" -type d -name BIOSUpdate)
+  usbupdate=$(find "$tmp_folder" -type d -name BIOSUpdate)
   bios_file=$(find "$tmp_folder" -name "*.bin")
   sig_file=$(find "$tmp_folder" -name "efibios.sig")
   ver_file=$(find "$tmp_folder" -name "ver.txt")
 
-	[ -n "$usbupdate" ]         || die "Package does not contain BIOS update files"
+  [ -n "$usbupdate" ]         || die "Package does not contain BIOS update files"
   [ -n "$ver_file" ]          || die "Package does not contain a ver.txt"
   [ -n "$sig_file" ]          || die "Package does not contain a efibios.sig"
   [ -n "$bios_file" ]         || die "Package does not contain a BIOS *.bin file"
@@ -157,6 +157,7 @@ for o in "$@"; do
     --file=*)     FILE="${o#*=}";;
     --output=*)   OUT_FOLDER="${o#*=}";;
     --help)       show_help;;
+    -h)           show_help;;
     *)            die "Unknown option: $o";;
   esac
 done
